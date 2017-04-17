@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @assessment_hash[:student][:name] %>'s Assessment Results</h1>
+    <ol>
+      <% @assessment_hash[:questions].each do |question| %>
+        <li>
+          <h4>"<%= sanitize question[:question].question %>"</h4>
+          <% if question[:correct_answer].image.file? %>
+            <p>Correct Answer: <%= image_tag question[:correct_answer].image.url(:medium) %></p>
+            <p>Their Answer: <%= image_tag question[:their_answer].image.url(:medium) %></p>
+          <% else %>
+            <p>Correct Answer: <%= sanitize question[:correct_answer].answer %></p>
+            <p>Their Answer: <%= sanitize question[:their_answer].answer %></p>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+    <p>Score: <%= @assessment_hash[:number_correct] %>/5</p>
+  </body>
+</html>

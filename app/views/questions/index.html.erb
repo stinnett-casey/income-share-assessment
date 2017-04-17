@@ -1,0 +1,63 @@
+<header id="header">
+  <div class="row">
+    <div class="large-12 columns">
+      <div class="top-bar" id="main-menu">
+      <div class="top-bar-middle">Enter Your Info</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="questions row">
+  <%= form_tag submission_path, method: 'post', class: 'assessment' do %>
+    <div class="question info active">
+      <div class="inputs-wrapper">
+        <input type="text" name="name" placeholder="Full Name">
+        <input type="email" name="email" placeholder="Email"></input>
+      </div>
+    </div>
+    <% @questions.each_with_index do |question, i| %>
+        <div class="question small-block-grid-1 medium-block-grid-2 large-block-grid-2">
+          <h4><%= raw question.question %></h4>
+          <% question.answers.limit(4).order("RANDOM()").each do |answer| %>
+            <input type="radio" name="questions[<%= question.id %>]" id="q<%= question.id %>:a<%= answer.id %>" value="<%= answer.id %>">
+            <% if answer.image.file? %>
+              <label class="answer" for="q<%= question.id %>:a<%= answer.id %>">
+                <%= image_tag answer.image.url %>
+                <%= link_to "Enlarge Image", answer.image.url, 'data-lightbox': "image-#{question.id}" %>
+              </label>
+            <% else %>
+              <label class="answer bg_gray" for="q<%= question.id %>:a<%= answer.id %>">
+                <span><p><%= raw Rinku.auto_link(answer.answer, mode=:all, target='target="_blank"') %></span></p>
+              </label>
+            <% end %>
+          <% end %>
+        </div>
+    <% end %>
+    <span id="previous">
+      <svg class="icon icon-arrow-left2">
+        <use xlink:href="#icon-arrow-left2"></use>
+        <defs>
+          <symbol id="icon-arrow-left2" viewBox="0 0 32 32">
+          <title>arrow-left2</title>
+          <path d="M12.586 27.414l-10-10c-0.781-0.781-0.781-2.047 0-2.828l10-10c0.781-0.781 2.047-0.781 2.828 0s0.781 2.047 0 2.828l-6.586 6.586h19.172c1.105 0 2 0.895 2 2s-0.895 2-2 2h-19.172l6.586 6.586c0.39 0.39 0.586 0.902 0.586 1.414s-0.195 1.024-0.586 1.414c-0.781 0.781-2.047 0.781-2.828 0z"></path>
+          </symbol>
+        </defs>
+      </svg>
+    </span>
+    <span id="next">
+      <svg class="icon icon-arrow-right2">
+        <use xlink:href="#icon-arrow-right2"></use>
+        <defs>
+          <symbol id="icon-arrow-right2" viewBox="0 0 32 32">
+          <title>arrow-right2</title>
+          <path d="M19.414 27.414l10-10c0.781-0.781 0.781-2.047 0-2.828l-10-10c-0.781-0.781-2.047-0.781-2.828 0s-0.781 2.047 0 2.828l6.586 6.586h-19.172c-1.105 0-2 0.895-2 2s0.895 2 2 2h19.172l-6.586 6.586c-0.39 0.39-0.586 0.902-0.586 1.414s0.195 1.024 0.586 1.414c0.781 0.781 2.047 0.781 2.828 0z"></path>
+          </symbol>
+        </defs>
+      </svg>
+    </span>
+    <!-- <button type="button" id="previous" disabled="true">Previous</button>
+    <button type="button" id="next">Next</button> -->
+    <a class="button radius" type="submit" id="submit">Submit</a>
+  <% end %>
+</div>

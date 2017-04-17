@@ -1,0 +1,21 @@
+<%= form_for @question do |f| %>
+  <%= f.text_area :question, placeholder: 'Enter The Question' %> <br>
+
+  <%= f.fields_for :answers do |af| %>
+
+    <div>
+      <%= af.text_field :answer, placeholder: 'Text for Option 1' %>
+      <%= content_tag :label, class: 'switch' do %>
+        <%= af.check_box :correct %>
+        <%= content_tag :div, '', class: ['slider', 'round'] %>
+      <% end %>
+      <%= af.label :correct %>
+      <%= af.file_field :image %>
+    </div>
+
+  <% end %>
+
+  
+  <%= f.submit "Submit", disable_with: 'Submitting...' %>
+<% end %>
+
