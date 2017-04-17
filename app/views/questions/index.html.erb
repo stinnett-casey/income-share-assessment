@@ -12,26 +12,30 @@
   <%= form_tag submission_path, method: 'post', class: 'assessment' do %>
     <div class="question info active">
       <div class="inputs-wrapper">
-        <input type="text" name="name" placeholder="Full Name">
-        <input type="email" name="email" placeholder="Email"></input>
+        <input type="text" name="name" placeholder="Full Name" required="required">
+        <input type="email" name="email" placeholder="Email" required="required">
       </div>
     </div>
     <% @questions.each_with_index do |question, i| %>
-        <div class="question small-block-grid-1 medium-block-grid-2 large-block-grid-2">
+        <div class="question">
           <h4><%= raw question.question %></h4>
-          <% question.answers.limit(4).order("RANDOM()").each do |answer| %>
-            <input type="radio" name="questions[<%= question.id %>]" id="q<%= question.id %>:a<%= answer.id %>" value="<%= answer.id %>">
-            <% if answer.image.file? %>
-              <label class="answer" for="q<%= question.id %>:a<%= answer.id %>">
-                <%= image_tag answer.image.url %>
-                <%= link_to "Enlarge Image", answer.image.url, 'data-lightbox': "image-#{question.id}" %>
-              </label>
-            <% else %>
-              <label class="answer bg_gray" for="q<%= question.id %>:a<%= answer.id %>">
-                <span><p><%= raw Rinku.auto_link(answer.answer, mode=:all, target='target="_blank"') %></span></p>
-              </label>
+          <div class="small-up-1 medium-up-1 large-up-2">
+            <% question.answers.limit(4).order("RANDOM()").each do |answer| %>
+              <div class="column">
+                <input type="radio" name="questions[<%= question.id %>]" id="q<%= question.id %>:a<%= answer.id %>" value="<%= answer.id %>">
+                <% if answer.image.file? %>
+                  <label class="answer" for="q<%= question.id %>:a<%= answer.id %>">
+                    <%= image_tag answer.image.url %>
+                    <%= link_to "Enlarge Image", answer.image.url, 'data-lightbox': "image-#{question.id}" %>
+                  </label>
+                <% else %>
+                  <label class="answer bg_gray" for="q<%= question.id %>:a<%= answer.id %>">
+                    <span><p><%= raw Rinku.auto_link(answer.answer, mode=:all, target='target="_blank"') %></span></p>
+                  </label>
+                <% end %>
+              </div>
             <% end %>
-          <% end %>
+          </div>
         </div>
     <% end %>
     <span id="previous">
@@ -58,6 +62,10 @@
     </span>
     <!-- <button type="button" id="previous" disabled="true">Previous</button>
     <button type="button" id="next">Next</button> -->
-    <a class="button radius" type="submit" id="submit">Submit</a>
+    <div class="row">
+      <div class="column">
+        <a class="button radius" id="submit" type="submit">Submit</a>
+      </div>
+    </div>
   <% end %>
 </div>

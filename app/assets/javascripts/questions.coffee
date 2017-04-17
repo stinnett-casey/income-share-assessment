@@ -8,14 +8,14 @@ $(document).on 'turbolinks:load', ->
       $active_question.removeClass('active').prev('.question').addClass('active');
       lastAndFirstCheck()
       index = $active_question.index()-3
-      $('.top-bar-middle').text(if index == 0 then "Enter Your Info" else "You're on " + (index) + "/5")
+      if index == 0 then setHeaderText "Enter Your Info" else setHeaderText "You're on " + (index) + "/5"
 
   $('#next').click ->
     $active_question = $(this).closest('.questions').find('.active')
     if $active_question.next('.question').length == 1
       $active_question.removeClass('active').next('.question').addClass('active');
       lastAndFirstCheck()
-      $('.top-bar-middle').text("You're on " + ($active_question.index()-1) + "/5")
+      setHeaderText "You're on " + ($active_question.index()-1) + "/5"
 
   $('input[type="checkbox"]').change ->
     $('input[type="checkbox"]').prop 'checked', false
@@ -29,26 +29,36 @@ $(document).on 'turbolinks:load', ->
     if $('[name="name"]').val() == '' && $('[name="email"]').val() == ''
       $('[name="name"]').addClass('error')
       $('[name="email"]').addClass('error')
-      alert 'Fill in your name and email address!'
-      return false
+      $('.question').removeClass('active')
+      $('[name="name"]').closest('.question').addClass('active')
+      setHeaderText 'Fill in your name and email address!'
+      e.preventDefault()
+      scrollToTop()
     else if $('[name="name"]').val() == ''
       $('[name="name"]').addClass('error')
-      alert 'Fill in your name!'
-      return false
+      $('.question').removeClass('active')
+      $('[name="name"]').closest('.question').addClass('active')
+      setHeaderText 'Fill in your name!'
+      e.preventDefault()
+      scrollToTop()
     else if $('[name="email"]').val() == ''
-      alert 'Fill in your email!'
-      return false
+      $('.question').removeClass('active')
+      $('[name="name"]').closest('.question').addClass('active')
+      setHeaderText 'Fill in your email!'
+      e.preventDefault()
+      scrollToTop()
 
+    found_one = false
     $('.question:not(.info)').each ->
-      one_answered = false
-      $(this).find('input[type="radio"]').each ->
-        if $(this).is(':checked')
-          one_answered = true
-      if !one_answered
+      if !isQuestionAnswered($(this)) and found_one == false
         $('.question').removeClass('active')
-        $(this).closest('.question').addClass('active')
-        return false
-      
+        $(this).addClass('active')
+        scrollToTop()
+        setHeaderText 'This one needs to be answered!'
+        e.preventDefault()
+        found_one = true
+        return
+
         
 
   $(document).on 'keyup', (e)->
@@ -78,6 +88,19 @@ lastAndFirstCheck = ->
     $('#submit').hide()
     $('#next').prop('disabled', false)
     $('#previous').prop('disabled', false)
+
+isQuestionAnswered = ($question)->
+  isAnswered = false
+  $inputs = $question.find('input[type="radio"]')
+  $inputs.each ->
+    isAnswered = true if $(this).is(':checked')
+  isAnswered
+
+setHeaderText = (text)->
+  $('.top-bar-middle').text(text)
+
+scrollToTop = ->
+  document.body.scrollTop = document.documentElement.scrollTop = 0
 
 
   
