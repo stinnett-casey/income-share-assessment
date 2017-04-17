@@ -16,6 +16,11 @@ $(document).on 'turbolinks:load', ->
       $active_question.removeClass('active').next('.question').addClass('active');
       lastAndFirstCheck()
       setHeaderText "You're on " + ($active_question.index()-1) + "/5"
+  $('.questions').on 'swipeleft', ->
+    $('#next').click()
+
+  $('.questions').on 'swiperight', ->
+    $('#previous').click()
 
   $('input[type="checkbox"]').change ->
     $('input[type="checkbox"]').prop 'checked', false
